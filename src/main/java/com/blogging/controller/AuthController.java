@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.blogging.exceptions.ApiException;
 import com.blogging.payloads.JwtAuthRequest;
 import com.blogging.payloads.JwtAuthResponse;
+import com.blogging.payloads.UserDto;
 import com.blogging.security.JwtTokenHelper;
+import com.blogging.services.UserService;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -30,6 +32,9 @@ public class AuthController {
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private UserService userService;
 	
 	
 	@PostMapping("/login")
@@ -60,8 +65,15 @@ public class AuthController {
 			System.out.println("Invalid Details!");
 			throw new ApiException("Invalit User or Password !");
 		}
-		
 	}
+	
+	//register new user
+	@PostMapping("/register")
+	public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto)
+		{
+		UserDto registeruser=this.userService.registerNewUser(userDto);
+		return new ResponseEntity<UserDto>(registeruser,HttpStatus.CREATED);
+		}
 	
 	
 
